@@ -12,8 +12,9 @@ public:
     bool intersects(Lines l);
     bool equals(Lines l);
     void add(Lines l);
-    uint64_t solutions();
+    bool solution() const;
     uint64_t cnt = 0;
+    bool operator<(const Lines& other) const;
 
 private:
     // bit masks representing the lines

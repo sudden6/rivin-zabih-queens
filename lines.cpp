@@ -17,9 +17,9 @@ Lines::Lines(unsigned int row, unsigned int column)
 
 bool Lines::intersects(Lines l)
 {
-    return (row & l.row) &&
-           (column & l.column) &&
-           (udiag & l.udiag) &&
+    return (row & l.row) ||
+           (column & l.column) ||
+           (udiag & l.udiag) ||
            (ddiag & l.ddiag);
 }
 
@@ -39,18 +39,19 @@ void Lines::add(Lines l)
     ddiag |= l.ddiag;
 }
 
-uint64_t Lines::solutions()
+bool Lines::solution() const
 {
     // mask for all columns/rows
     uint64_t mask = (1 << N) - 1;
-    if((row == mask) && (column == mask))
-    {
-        return cnt;
-    }
-    else
-    {
-        return  0;
-    }
+    return  (row == mask) && (column == mask);
+}
+
+bool Lines::operator<(const Lines &other) const
+{
+    return row < other.row ||
+           column < other.column ||
+           udiag < other.udiag ||
+           ddiag < other.ddiag;
 }
 
 

@@ -1,6 +1,8 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
-#define N 7
+#include <cstdint>
+
+constexpr uint8_t N = 5;    // board size
 
 #endif // CONSTANTS_H

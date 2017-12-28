@@ -1,16 +1,14 @@
 #include <iostream>
-#include <forward_list>
+#include <map>
 #include "lines.h"
 
 using namespace std;
 
 int main()
 {
-    forward_list<Lines>* q = new forward_list<Lines>();
+    auto q = new map<Lines, uint64_t>();
     // Initialization
-    Lines zero_element{};
-    zero_element.cnt = 1;
-    q->push_front(zero_element);
+    q->emplace(Lines{}, 1);
 
     for(unsigned int row = 0; row < N; row++)
     {
@@ -21,28 +19,22 @@ int main()
             // iteration
             for(auto s = q->begin(); s != q->end(); ++s)
             {
-                if(t.intersects(*s))
+                if(t.intersects(s->first))
                 {
                     continue;
                 }
-                t.add(*s);
-                bool found = false;
-                uint64_t i = (*s).cnt;
-                for(auto c = q->begin(); c != q->end(); ++c)
+                t.add(s->first);
+                uint64_t i = s->second;
+                auto f = q->find(t);
+                if(f == q->end())
+                {
+                    // creation
+                    q->insert(std::pair<Lines, uint64_t>(t, i));
+                }
+                else
                 {
                     // compaction
-                    if((*c).equals(t))
-                    {
-                        (*c).cnt += i;
-                        found = true;
-                    }
-                }
-
-                // creation
-                if(!found)
-                {
-                    t.cnt = i;
-                    q->insert_after(s, t);
+                    f->second += i;
                 }
             }
         }
@@ -52,7 +44,10 @@ int main()
 
     for(auto s = q->begin(); s != q->end(); ++s)
     {
-        solutions += (*s).solutions();
+        if(s->first.solution())
+        {
+            solutions += s->second;
+        }
     }
 
     cout << "DONE" << std::endl;
