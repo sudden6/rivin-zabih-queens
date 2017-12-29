@@ -7,12 +7,12 @@
 // up diagonal index starts at 0 with the top left corner
 // down diagonal index starts at 0 with the bottom left corner
 
-Lines::Lines(unsigned int row, unsigned int column)
+Lines::Lines(unsigned int row, unsigned int column, unsigned int board_size)
 {
     this->row = 1 << row;
     this->column = 1 << column;
     this->udiag = 1 << (row + column);
-    this->ddiag = 1 << (N - 1 + column - row);
+    this->ddiag = 1 << (board_size - 1 + column - row);
 }
 
 bool Lines::intersects(Lines l)
@@ -31,18 +31,20 @@ bool Lines::equals(Lines l)
            (ddiag == l.ddiag);
 }
 
-void Lines::add(Lines l)
+Lines Lines::add(Lines l)
 {
-    row |= l.row;
-    column |= l.column;
-    udiag |= l.udiag;
-    ddiag |= l.ddiag;
+    Lines result{};
+    result.row = row | l.row;
+    result.column = column | l.column;
+    result.udiag = udiag | l.udiag;
+    result.ddiag = ddiag | l.ddiag;
+    return  result;
 }
 
-bool Lines::solution() const
+bool Lines::solution(unsigned int board_size) const
 {
     // mask for all columns/rows
-    uint64_t mask = (1 << N) - 1;
+    uint64_t mask = (1 << board_size) - 1;
     return  (row == mask) && (column == mask);
 }
 

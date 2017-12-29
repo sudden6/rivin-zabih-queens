@@ -8,11 +8,11 @@ class Lines
 {
 public:
     Lines() = default;
-    Lines(unsigned int row, unsigned int column);
+    Lines(unsigned int row, unsigned int column, unsigned int board_size);
     bool intersects(Lines l);
     bool equals(Lines l);
-    void add(Lines l);
-    bool solution() const;
+    Lines add(Lines l);
+    bool solution(unsigned int board_size) const;
     uint64_t cnt = 0;
     bool operator<(const Lines& other) const;
 
