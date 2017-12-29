@@ -3,7 +3,7 @@
 
 #include <cstdint>
 
-constexpr uint8_t N = 7;        // board size
+constexpr uint8_t N = 14;       // board size
 constexpr uint8_t MAXN = 32;    // maximum board size
 
 // expected results from https://oeis.org/A000170

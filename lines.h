@@ -12,14 +12,14 @@ public:
     bool intersects(Lines l);
     bool equals(Lines l);
     Lines add(Lines l);
+    bool has_row(unsigned int row) const;
     bool solution(unsigned int board_size) const;
-    uint64_t cnt = 0;
     bool operator<(const Lines& other) const;
 
 private:
     // bit masks representing the lines
-    uint64_t row = 0;
-    uint64_t column = 0;
+    uint32_t row = 0;
+    uint32_t column = 0;
     uint64_t ddiag = 0;
     uint64_t udiag = 0;
 };

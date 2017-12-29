@@ -1,16 +1,16 @@
 #include <iostream>
 #include <map>
 #include <vector>
+#include <algorithm>
 #include "lines.h"
 
 using namespace std;
 
 uint64_t nqueens(unsigned int N)
 {
-    auto q = new vector<Lines>();
+    map<Lines, uint64_t> q;
     // Initialization
-    q->emplace_back(Lines{});
-    q->at(0).cnt = 1;
+    q.emplace(Lines{}, 1);
 
     for(unsigned int row = 0; row < N; row++)
     {
@@ -19,45 +19,55 @@ uint64_t nqueens(unsigned int N)
             // square selection
             Lines square(row, col, N);
 
-            // cout << "square " << row*N+col << " of " << N*N << " queue size " << q->size() << endl;
+            cout << "square " << row*N+col << " of " << N*N << " queue size " << q.size() << endl;
 
             // iteration
-            for(size_t idx = 0; idx < q->size(); ++idx)
+            for(auto s: q)
             {
-                if(square.intersects(q->at(idx)))
+                if(square.intersects(s.first))
                 {
                     continue;
                 }
-                Lines u = square.add(q->at(idx));
-                uint64_t i = q->at(idx).cnt;
-                u.cnt = i;
-                size_t jdx = 0;
-                for(; jdx < q->size(); ++jdx)
+                Lines u = square.add(s.first);
+                uint64_t i = s.second;
+                //u.cnt = i;
+
+                auto it = q.find(u);
+
+                if(it != q.end())
                 {
-                    Lines& cur = q->at(jdx);
-                    if(cur.equals(u))
-                    {
-                        // compaction
-                        cur.cnt += i;
-                        break;
-                    }
+                    // compaction
+                    it->second += i;
                 }
-                if(jdx == q->size())
-                {
-                    // creation
-                    q->push_back(u);
+                else
+                {   // creation
+                    q.insert(std::pair<Lines, uint64_t>(u, i));
                 }
             }
         }
+        auto iter = q.begin();
+        auto end = q.end();
+        for(; iter != end; )
+        {
+            if (!iter->first.has_row(row))
+            {
+                q.erase(iter++);
+            }
+            else
+            {
+                ++iter;
+            }
+        }
+
     }
 
     uint64_t solutions = 0;
 
-    for(auto s = q->begin(); s != q->end(); ++s)
+    for(auto s = q.begin(); s != q.end(); ++s)
     {
-        if(s->solution(N))
+        if(s->first.solution(N))
         {
-            solutions += s->cnt;
+            solutions += s->second;
         }
     }
     return solutions;

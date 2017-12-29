@@ -41,6 +41,11 @@ Lines Lines::add(Lines l)
     return  result;
 }
 
+bool Lines::has_row(unsigned int row) const
+{
+    return this->row & (1 << row);
+}
+
 bool Lines::solution(unsigned int board_size) const
 {
     // mask for all columns/rows
@@ -50,9 +55,9 @@ bool Lines::solution(unsigned int board_size) const
 
 bool Lines::operator<(const Lines &other) const
 {
-    return row < other.row ||
-           column < other.column ||
-           udiag < other.udiag ||
+    return row <= other.row ||
+           column <= other.column ||
+           udiag <= other.udiag ||
            ddiag < other.ddiag;
 }
 
